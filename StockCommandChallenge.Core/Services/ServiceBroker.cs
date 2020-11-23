@@ -42,29 +42,22 @@ namespace StockCommandChallenge.Core.Services
 
         public void AddConsumer(string queueName, Action<string> onReceived)
         {
-            try
+            _channel.QueueDeclare(queue: queueName, exclusive: false, autoDelete: true);
+
+            _channel.QueueBind(queue: queueName,
+                              exchange: EXCHANGE_NAME,
+                              routingKey: "");
+
+            var consumer = new EventingBasicConsumer(_channel);
+            consumer.Received += (model, ea) =>
             {
-                _channel.QueueDeclare(queue: queueName, exclusive: false, autoDelete: true);
-
-                _channel.QueueBind(queue: queueName,
-                                  exchange: EXCHANGE_NAME,
-                                  routingKey: "");
-
-                var consumer = new EventingBasicConsumer(_channel);
-                consumer.Received += (model, ea) =>
-                {
-                    var body = ea.Body.ToArray();
-                    var message = Encoding.UTF8.GetString(body);
-                    onReceived(message);
-                };
-                _channel.BasicConsume(queue: queueName,
-                                     autoAck: true,
-                                     consumer: consumer);
-            }
-            catch (Exception ex)
-            {
-
-            }
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+                onReceived(message);
+            };
+            _channel.BasicConsume(queue: queueName,
+                                 autoAck: true,
+                                 consumer: consumer);
         }
 
         public void SendBroadcast(string message)
