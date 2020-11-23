@@ -8,3 +8,9 @@ Run these commands to set up the databse from EF code first:
 
 
 To set up RabbitMQ Server configuration go to appsettings.json and configure ServiceBrokerHostName, ServiceBrokerUsername, ServiceBrokerPassword in AppSetting Key.
+
+# Bonus functionality
+
+1) Identity authentication implemented.
+
+2) Handle message exceptions.
