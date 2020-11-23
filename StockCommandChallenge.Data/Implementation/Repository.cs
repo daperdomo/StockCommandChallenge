@@ -8,7 +8,7 @@ using System.Text;
 
 namespace StockCommandChallenge.Data.Implementation
 {
-    public class Repository<T> : IRepository<T> where T : class, IBaseEntity
+    public class Repository<T> : IRepository<T> where T : class
     {
         protected readonly IDbContext _context;
         public DbSet<T> Table { get; }

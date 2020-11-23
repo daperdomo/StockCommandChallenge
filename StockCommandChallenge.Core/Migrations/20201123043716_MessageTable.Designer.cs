@@ -10,7 +10,7 @@ using StockCommandChallenge.Core.Models;
 namespace StockCommandChallenge.Core.Migrations
 {
     [DbContext(typeof(StockCommandChallengeContext))]
-    [Migration("20201123034922_MessageTable")]
+    [Migration("20201123043716_MessageTable")]
     partial class MessageTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,18 +28,15 @@ namespace StockCommandChallenge.Core.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("getdate()");
 
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
                     b.Property<string>("MessageText")
                         .IsRequired()
                         .HasMaxLength(200)
                         .IsUnicode(false)
                         .HasColumnType("varchar(200)");
-
-                    b.Property<byte[]>("SentTime")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
+                    
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(50)

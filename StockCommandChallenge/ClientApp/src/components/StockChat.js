@@ -32,12 +32,39 @@ export class StockChat extends Component {
                 messages: messages
             }, this.ScrollToBottom);
         });
+
+        hubConnection.on('Initialize', (messages) => {
+            console.log(messages);
+            var messagesObj = messages.reverse().map(item => {
+                return {
+                    text: item.messageText,
+                    userName: item.username,
+                    date: item.created
+                }
+            });
+            this.setState({
+                messages: messagesObj,
+                loading: false
+            }, this.ScrollToBottom);
+        });
+
         this.setState({ hubConnection }, () => {
             this.state.hubConnection
                 .start()
-                .then(() => console.log('Connection started!'))
+                .then(() => {
+                    this.Initialize();
+                    console.log('Connection started!');
+                })
                 .catch(err => console.log('Error while establishing connection', err));
 
+        });
+    }
+
+    Initialize() {
+        authService.getUser().then(user => {
+            this.state.hubConnection
+                .invoke('Initialize', user.name)
+                .catch(err => console.error(err));
         });
     }
 
@@ -55,7 +82,6 @@ export class StockChat extends Component {
                 .invoke('SendMessage', user.name, currentMessage)
                 .catch(err => console.error(err));
             this.setState({
-                //messages: messages,
                 currentMessage: ''
             }, this.ScrollToBottom);
         };
@@ -66,28 +92,18 @@ export class StockChat extends Component {
     }
 
     render() {
-        const { messages, currentMessage } = this.state;
+        const { messages, currentMessage, loading } = this.state;
         return (
             <div>
-                <MessageList messages={messages} />
+                <MessageList messages={messages} loading={loading} />
                 <input style={{
                     width: "100%"
-                }} type="text" onKeyUp={this.onKeyUpMessage} onChange={this.onChangeMessage} value={currentMessage} />
+                }} type="text" onKeyUp={this.onKeyUpMessage} onChange={this.onChangeMessage} disabled={loading} value={currentMessage} />
             </div>
         );
     }
 
-    async populateWeatherData() {
-        const token = await authService.getAccessToken();
-        const response = await fetch('weatherforecast', {
-            headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await response.json();
-        this.setState({ forecasts: data, loading: false });
-    }
-
     async LoadUser() {
         const user = await authService.getUser();
-        console.log(user);
     }
 }

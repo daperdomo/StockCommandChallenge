@@ -12,12 +12,17 @@ export class MessageList extends Component {
                 padding: "0",
                 border: "1px solid black"
             }} id="message-list">
-                {this.props.messages.map(function (item, index) {
-                    var d = new Date(item.date);
-                    return (<li key={index}>
-                        <strong>{item.userName} ({formatDate(d)}):</strong> {item.text}
-                    </li>);
-                })}
+                {this.props.loading ?
+                    <li >
+                        <strong>Loading</strong>
+                    </li>
+                    :
+                    this.props.messages.map(function (item, index) {
+                        var d = new Date(item.date);
+                        return (<li key={index}>
+                            <strong>{item.userName} ({formatDate(d)}):</strong> {item.text}
+                        </li>);
+                    })}
             </ul>
         );
     }

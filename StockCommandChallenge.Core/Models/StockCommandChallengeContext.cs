@@ -33,17 +33,10 @@ namespace StockCommandChallenge.Core.Models
         {
             modelBuilder.Entity<Message>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.Property(e => e.MessageText)
                     .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
-
-                entity.Property(e => e.SentTime)
-                    .IsRequired()
-                    .IsRowVersion()
-                    .IsConcurrencyToken();
 
                 entity.Property(e => e.Username)
                     .IsRequired()

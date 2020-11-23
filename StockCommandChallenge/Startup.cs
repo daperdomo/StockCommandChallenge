@@ -15,6 +15,8 @@ using StockCommandChallenge.Core.Interfaces;
 using StockCommandChallenge.Core.Services;
 using StockCommandChallenge.Data.Interfaces;
 using StockCommandChallenge.Core.Models;
+using StockCommandChallenge.Data.Implementation;
+using StockCommandChallenge.Core.Communication;
 
 namespace StockCommandChallenge
 {
@@ -57,8 +59,14 @@ namespace StockCommandChallenge
                 configuration.RootPath = "ClientApp/build";
             });
 
+            services.AddSignalR();
+
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<ICommandHelper, CommandHelper>();
             services.AddScoped<IStockService, StockService>();
+            services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<ICommunicationService, CommunicationService>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,6 +99,7 @@ namespace StockCommandChallenge
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+                endpoints.MapHub<ChatHub>("/chatHub");
             });
 
             app.UseSpa(spa =>

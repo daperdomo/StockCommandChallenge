@@ -18,7 +18,7 @@ namespace StockCommandChallenge.Core.Services
 
         public IEnumerable<Message> GetLast50Messages()
         {
-            var result = _messageRepository.Table.OrderByDescending(m => m.SentTime).ToList();
+            var result = _messageRepository.Table.OrderByDescending(m => m.Created).ToList();
             return result;
         }
 

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using StockCommandChallenge.Core.Interfaces;
+using StockCommandChallenge.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,46 +10,24 @@ namespace StockCommandChallenge.Core.Communication
 {
     public class ChatHub : Hub<IClient>
     {
-        //private readonly IStockApiService _stockApiService;
-        public ChatHub(/*IStockApiService stockApiService*/)
+        private readonly ICommunicationService _communicationService;
+        public ChatHub(ICommunicationService communicationService)
         {
-            //_stockApiService = stockApiService;
+            _communicationService = communicationService;
         }
-
-        public async Task SendMessage(string userName, string message)
+        public async Task Initialize(string userName)
         {
-
-            //try
-            //{
-            //    string stockCode = CommandHelper.StockCommand(message);
-            //    if (!string.IsNullOrEmpty(stockCode))
-            //    {
-            //        await Clients.All.SendMessage(userName, message, DateTime.Now);
-            //        var result = await _stockApiService.GetStock(stockCode);
-            //        await Clients.All.SendMessage("System", result, DateTime.Now);
-            //    }
-            //    else if (CommandHelper.IsHelpCommand(message))
-            //    {
-            //        await Clients.Client(Context.ConnectionId).SendMessage("System", "The correct command format is /stock={stock_code}", DateTime.Now);
-            //    }
-            //    else if (message.Trim().StartsWith("/"))
-            //    {
-            //        await Clients.All.SendMessage("System", "Command error, use /HELP for more information.", DateTime.Now);
-            //    }
-            //    else
-            //    {
-            //        await Clients.All.SendMessage(userName, message, DateTime.Now);
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    await Clients.Client(Context.ConnectionId).SendMessage("System", ex.Message, DateTime.Now);
-            //}
+            await _communicationService.Initialize(userName, Context.ConnectionId);
+        }
+        public void SendMessage(string userName, string message)
+        {
+            _communicationService.HandleMessage(Context.ConnectionId, userName, message);
         }
     }
 
     public interface IClient
     {
+        Task Initialize(IEnumerable<Message> messages);
         Task SendMessage(string userName, string message, DateTime date);
     }
 }

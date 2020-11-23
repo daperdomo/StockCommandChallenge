@@ -26,6 +26,9 @@ namespace StockCommandChallenge.Core.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("getdate()");
 
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
                     b.Property<string>("MessageText")
                         .IsRequired()
                         .HasMaxLength(200)
