@@ -10,6 +10,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication;
 using StockCommandChallenge.Core.ViewModels;
 using StockCommandChallenge.Models;
+using StockCommandChallenge.Core.Helpers;
+using StockCommandChallenge.Core.Interfaces;
+using StockCommandChallenge.Core.Services;
 
 namespace StockCommandChallenge
 {
@@ -48,6 +51,9 @@ namespace StockCommandChallenge
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddScoped<ICommandHelper, CommandHelper>();
+            services.AddScoped<IStockService, StockService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
