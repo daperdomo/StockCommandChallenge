@@ -19,11 +19,6 @@ namespace StockCommandChallenge.Data.Implementation
             Table = context.Set<T>();
         }
 
-        public T Find(int Id)
-        {
-            return Table.FirstOrDefault(m => m.Id == Id);
-        }
-
         public int Count()
         {
             return Table.Count();

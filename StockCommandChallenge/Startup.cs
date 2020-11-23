@@ -13,6 +13,8 @@ using StockCommandChallenge.Models;
 using StockCommandChallenge.Core.Helpers;
 using StockCommandChallenge.Core.Interfaces;
 using StockCommandChallenge.Core.Services;
+using StockCommandChallenge.Data.Interfaces;
+using StockCommandChallenge.Core.Models;
 
 namespace StockCommandChallenge
 {
@@ -32,6 +34,9 @@ namespace StockCommandChallenge
             services.Configure<AppSettings>(appSettingsSection);
 
             services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<IDbContext, StockCommandChallengeContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<ApplicationUser>()
