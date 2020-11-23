@@ -10,24 +10,12 @@ namespace StockCommandChallenge.Core.Models
 {
     public partial class StockCommandChallengeContext : DbContext, IDbContext
     {
-        private IConfiguration Configuration { get; }
-        public StockCommandChallengeContext()
-        {
-        }
-
-        public StockCommandChallengeContext(DbContextOptions<StockCommandChallengeContext> options, IConfiguration configuration)
+        public StockCommandChallengeContext(DbContextOptions<StockCommandChallengeContext> options)
        : base(options)
         {
-            Configuration = configuration;
         }
 
         public virtual DbSet<Message> Messages { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server=MSI\\DARWINSQL;Database=StockCommandChallenge;Trusted_Connection=True;MultipleActiveResultSets=true");
-
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

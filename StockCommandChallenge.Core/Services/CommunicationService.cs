@@ -36,7 +36,6 @@ namespace StockCommandChallenge.Core.Services
                 string stockCode = _commandHelper.GetStock(message);
                 if (!string.IsNullOrEmpty(stockCode))
                 {
-                    _messageService.SaveMessage(userName, message);
                     await _chatHub.Clients.All.SendMessage(userName, message, DateTime.Now);
                     _stockService.GetStock(stockCode);
                 }
