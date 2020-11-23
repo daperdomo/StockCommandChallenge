@@ -66,7 +66,8 @@ namespace StockCommandChallenge
             services.AddScoped<IStockService, StockService>();
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<ICommunicationService, CommunicationService>();
-            
+            services.AddScoped<IServiceBroker, ServiceBroker>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

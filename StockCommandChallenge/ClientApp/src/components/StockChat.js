@@ -19,6 +19,8 @@ export class StockChat extends Component {
             .withUrl("/chatHub")
             .build();
 
+        console.log(hubConnection);
+
         hubConnection.on('SendMessage', (userName, receivedMessage, date) => {
             let { messages } = this.state;
             var msg = {
@@ -34,7 +36,6 @@ export class StockChat extends Component {
         });
 
         hubConnection.on('Initialize', (messages) => {
-            console.log(messages);
             var messagesObj = messages.reverse().map(item => {
                 return {
                     text: item.messageText,

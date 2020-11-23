@@ -11,13 +11,19 @@ namespace StockCommandChallenge.Core.Services
 {
     public class StockService : IStockService
     {
-
+        private readonly IMessageService _messageService;
+        private readonly IServiceBroker _serviceBroker;
         private readonly AppSettings settings;
         HttpClient _client;
-        public StockService(IOptions<AppSettings> appSettings)
+        public StockService(IOptions<AppSettings> appSettings,
+            IMessageService messageService,
+            IServiceBroker serviceBroker
+            )
         {
             settings = appSettings.Value;
             _client = new HttpClient();
+            _messageService = messageService;
+            _serviceBroker = serviceBroker;
         }
 
         public string GetStockFromFileContent(string fileContent)
@@ -61,10 +67,13 @@ namespace StockCommandChallenge.Core.Services
             return fileContent;
         }
 
-        public async Task<string> GetStock(string stockCode)
+        public void GetStock(string stockCode)
         {
-            var fileContent = await this.GetStockFileContent(stockCode);
-            return GetStockFromFileContent(fileContent);
+            var fileContent = this.GetStockFileContent(stockCode).Result;
+            var stock = GetStockFromFileContent(fileContent);
+            _messageService.SaveMessage("System", stock);
+            _serviceBroker.SendBroadcast(stock);
+            _serviceBroker.Close();
         }
     }
 }
